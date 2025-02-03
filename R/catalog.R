@@ -16,9 +16,29 @@ function(prog = "uwp", url = paste0("https://catalog.ucdavis.edu/courses-subject
     z2 = lapply(z, function(x) xpathSApply(x, ".//b", xmlValue))
 
     tmp = as.data.frame(matrix(unlist(z2), , 3, byrow = TRUE))
-    names(tmp) = c("number", "description", "units")
+    names(tmp) = c("number", "title", "units")
 
     cleanCourses(tmp)
+}
+
+getCourseText =
+function(node, xp)
+{
+    node = xmlParent(node)
+    p = getNodeSet(node, xp)
+    trimws(paste(xmlSApply(p[[1]], xmlValue)[-1], collapse = " "))
+}
+
+getDescription =
+function(node)    
+{
+    getCourseText(node, ".//p[.//em[. = 'Course Description:']]")
+}
+
+getPrereqs =
+function(node)    
+{
+    getCourseText(node, ".//p[contains(@class, 'detail-prerequisite')]")
 }
 
 cleanCourses =
