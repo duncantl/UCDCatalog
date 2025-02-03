@@ -1,0 +1,7 @@
+Package: UCDCatalog
+Version: 0.1-0
+Title: UC Davis course and subject information
+Description: Scrape course and subject information from the UC Davis catalog Web pages.
+Author: Duncan Temple Lang
+Maintainer: Duncan Temple Lang <dtemplelang@ucdavis.edu>
+Imports: XML
