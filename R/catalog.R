@@ -1,10 +1,18 @@
 # From OGS/ESLCourses
+#
+# Problems
+## DVM
+
 courseInfo =
 function(prog = "uwp", url = paste0("https://catalog.ucdavis.edu/courses-subject-code/", tolower(prog), "/"))
 {        
     doc = htmlParse(readLines(url))
     #    z = getNodeSet(doc, "//h3[contains(., 'UWP 102') or contains(., 'UWP 104')]")
-    z = getNodeSet(doc, "//h3")    
+    z = getNodeSet(doc, "//h3")
+
+    if(length(z) == 0)
+        return(list())
+    
     z2 = lapply(z, function(x) xpathSApply(x, ".//b", xmlValue))
 
     tmp = as.data.frame(matrix(unlist(z2), , 3, byrow = TRUE))
@@ -24,9 +32,9 @@ function(tmp)
     tmp$units[w] = as.numeric(gsub(rx, "\\1", tmp$units[w]))
     tmp$minUnits = tmp$maxUnits = tmp$units
     i = grep("-", u)
-    rx = "\\(([0-9]+)-[0-9]+ units\\)"
+    rx = "\\(([0-9.]+)-[0-9.]+ units\\)"
     tmp$minUnits[i] = as.numeric(gsub(rx, "\\1", u[i]))
-    tmp$maxUnits[i] = as.numeric(gsub("\\(([0-9]+)-([0-9]+) units\\)", "\\2", u[i]))    
+    tmp$maxUnits[i] = as.numeric(gsub(rx, "\\2", u[i]))    
     
     tmp$number = gsub("^UWP ", "", tmp$number)
     
